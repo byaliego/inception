@@ -1,66 +1,77 @@
-version: '3.5'
+version: '3.5'                       # docker-compose version for syntax that being used
 
 
-networks:
-  inception: {}
-
-services:
-  mariadb:
-    container_name: mariadb
-    image: mariadb
-    build:
-      context: ./requirements/mariadb
-      args:
-        - DB_NAME=${DB_NAME}
-        - DB_USER=${DB_USER}
-        - DB_PASSWORD=${DB_PASSWORD}
-        - DB_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
-    networks:
-      - inception
-    volumes:
-      - mariadb_v:/var/lib/mysql
-    restart: unless-stopped
-
-  wordpress:
-    container_name: wordpress
-    image: wordpress
-    build: ./requirements/wordpress
-    networks:
-      - inception
-    volumes:
-      - wordpress_v:/var/www/wordpress
-    env_file: .env
-    depends_on:
-      - mariadb
-    restart: unless-stopped
-
-  nginx:
-    container_name: nginx
-    image: nginx
-    build: ./requirements/nginx
-    ports:
-      - "443:443"
-    networks:
-      - inception
-    volumes:
-      - wordpress_v:/var/www/wordpress
-    depends_on:
-      - wordpress
-      - mariadb
-    restart: unless-stopped
+networks:                         # This section defines the network configurations for the services in the Docker Compose file. 
+  inception: {}                   # The name of the network is inception. This network is used by the services to communicate with each other.
 
 
-volumes:
-  mariadb_v:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: /home/yogun/data/mariadb
 
-  wordpress_v:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: /home/yogun/data/wordpress
+services:                                 # This section defines the individual services (containers) that make up my WordPress website.
+  
+  mariadb:                                  # This service defines the configuration for the MariaDB container.
+    container_name: mariadb                 #  It specifies the container name, the Docker image to be used.
+    build:                                    # This section defines the build configuration for the MariaDB container.
+      context: ./requirements/mariadb           # The context is the directory where the Dockerfile is located.
+      args:                                       # The args section defines the build arguments that are passed to the Dockerfile.
+        - DB_NAME=${DB_NAME}                        #  The DB_NAME build argument is set to the value of the DB_NAME environment variable that is defined in the .env file.
+        - DB_USER=${DB_USER}                          # SAME, From .env file
+        - DB_PASSWORD=${DB_PASSWORD}                    # SAME, From .env file
+        - DB_ROOT_PASSWORD=${DB_ROOT_PASSWORD}            # SAME, From .env file
+    networks:                                             # This section defines the network configuration for the MariaDB container.
+      - inception                                         # The MariaDB container is connected to the inception network.
+    volumes:                                              # This section defines the volume configuration for the MariaDB container.
+      - mariadb_vol:/var/lib/mysql                          # The MariaDB container mounts the mariadb_vol volume to the /var/lib/mysql directory. mariadb_vol is defined in the volumes section of the Docker Compose file.
+    restart: unless-stopped                                 # This section defines the restart policy for the MariaDB container. The restart policy is set to unless-stopped. This means that the container will be restarted unless it is manually stopped.
+
+
+
+
+  
+  wordpress:                                              # This service defines the configuration for the WordPress container. 
+    container_name: wordpress                             # It specifies the container name, the Docker image to be used.
+    image: wordpress                                    # The image is the official WordPress image from Docker Hub.          
+    build: ./requirements/wordpress                       # This section defines the build configuration for the WordPress container.
+    networks:                                        # This section defines the network configuration for the WordPress container.          
+      - inception                                       # The WordPress container is connected to the inception network.
+    volumes:                                            # This section defines the volume configuration for the WordPress container.
+      - wordpress_vol:/var/www/wordpress                 # The WordPress container mounts the wordpress_vol volume to the /var/www/wordpress directory. wordpress_vol is defined in the volumes section of the Docker Compose file. 
+    env_file: .env                                        # The env_file section defines the environment variables that are passed to the WordPress container. The environment variables are defined in the .env file.
+    depends_on:                                           # The depends_on section defines the services that the WordPress container depends on. The WordPress container depends on the MariaDB container.
+      - mariadb                                           # The WordPress container will not start until the MariaDB container is running. Because of depends_on ;)
+    restart: unless-stopped                               # This section defines the restart policy for the WordPress container. The restart policy is set to unless-stopped. This means that the container will be restarted unless it is manually stopped.
+
+
+
+
+  nginx:                                                   # This service defines the configuration for the Nginx container.                                                         
+    container_name: nginx                                  # It specifies the container name, the Docker image to be used.                    
+    image: nginx                                            # The image is the official Nginx image from Docker Hub.          
+    build: ./requirements/nginx                             # This section defines the build configuration for the Nginx container.                          
+    ports:                                                   # This section defines the port configuration for the Nginx container.   
+      - "443:443"                                             # The Nginx container exposes port 443 to the host machine. The port 443 on the host machine is mapped to port 443 on the Nginx container. 443 <=> 443.          
+    networks:                                                  # This section defines the network configuration for the Nginx container.    
+      - inception                                              # The Nginx container is connected to the inception network.        
+    volumes:                                                   # This section defines the volume configuration for the Nginx container.   
+      - wordpress_vol:/var/www/wordpress                        # The Nginx container mounts the wordpress_vol volume to the /var/www/wordpress directory. wordpress_vol is defined in the volumes section of the Docker Compose file.                              
+    depends_on:                                                 # The depends_on section defines the services that the Nginx container depends on. The Nginx container depends on the WordPress container.     
+      - wordpress                                                # The Nginx container will not start until the WordPress container is running.    
+      - mariadb                                                   # Same here   
+    restart: unless-stopped                                       # This section defines the restart policy for the Nginx container. The restart policy is set to unless-stopped. This means that the container will be restarted unless it is manually stopped.               
+                                                      
+
+
+
+volumes:                                                      # This section defines the volumes that are used by the services in the Docker Compose file.
+  mariadb_vol:                                                # This section defines the volume configuration for the mariadb_vol volume.      
+    driver: local                                              # The driver is set to local. This means that the volume is created on the host machine. Check the Docker documentation dear evaluator for more information about volume drivers https://docs.docker.com/storage/volumes/        
+    driver_opts:                                               # The driver_opts section defines the driver options for the volume.        
+      type: none                                                # The type option is set to none. This means that the volume is not managed by Docker.       
+      o: bind                                                   # The o option is set to bind. This means that the volume is mounted from the host machine. O stands for options. Bind is a mount option. 
+      device: /home/yogun/data/mariadb                          # The device option is set to /home/yogun/data/mariadb. This means that the volume is mounted from the /home/yogun/data/mariadb directory on the host machine.                                            
+                                                      
+  wordpress_vol:                                                 # Same stuff here         
+    driver: local                                                      
+    driver_opts:                                                      
+      type: none                                                      
+      o: bind                                                      
+      device: /home/yogun/data/wordpress                                                      

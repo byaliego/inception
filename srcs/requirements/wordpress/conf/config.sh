@@ -16,5 +16,5 @@ wp core install --title=$WP_TITLE \
 wp user create $WP_USER $WP_USER_MAIL --role=author --user_pass=$WP_USER_PASSWORD --allow-root
 cd -
 
-# run php-fpm7.3 listening for CGI request
+# run php-fpm7.3 listening for CGI request. CGI stands for Common Gateway Interface.
 php-fpm7.3 -F

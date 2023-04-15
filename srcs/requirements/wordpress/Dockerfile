@@ -10,11 +10,11 @@ RUN apt-get update && apt-get install -y php7.3-mysql php7.3-fpm curl mariadb-cl
 # COPY command helps us to copy something from the host machine to the container. In this case we are copying the www.conf file from the conf folder to the /etc/php/7.3/fpm/pool.d folder inside the container. The reason we need this configuration file is because we want to change the user and group of the php-fpm process. We want to change it to www-data because we want to have the same user and group for the php-fpm process and the nginx process. This way we can have the same user and group for the files that are created by the php-fpm process and the nginx process. This way we can avoid permission issues. The www.conf file is the configuration file for the web server or the PHP-FPM (FastCGI Process Manager) process pool.
 COPY ./conf/www.conf /etc/php/7.3/fpm/pool.d
 
-# set -ex command helps us to set the execution mode of the shell. With this command we are setting the execution mode to verbose and exit on error. This way we can see the commands that are executed inside the container. Then we are downloading the latest version of the WordPress from the official website. After that we are extracting the files from the tar.gz file. After that we are removing the tar.gz file. This way we can keep the image size as small as possible.
-RUN set -ex \
-    && curl -o /var/www/latest.tar.gz -SL https://wordpress.org/latest.tar.gz \
-    && tar -xzf /var/www/latest.tar.gz -C /var/www/ \
-    && rm /var/www/latest.tar.gz
+# Here with ADD command I am adding the latest version of wordpress to the container. With ADD command we can add files from the host machine to the container. With ADD command we can also download files from the internet. In this case I am downloading the latest version of wordpress from the internet. With ADD command I am adding the latest.tar.gz file to the /var/www folder inside the container.
+ADD https://wordpress.org/latest.tar.gz /var/www/latest.tar.gz
+
+# Here with RUN command I am extracting the latest.tar.gz file. After that I am removing the latest.tar.gz file. The reason I am removing the latest.tar.gz file is because I don't need it anymore. I only need the extracted files. And I want to keep the image size as small as possible.
+RUN cd /var/www && tar -xvf latest.tar.gz && rm -rf latest.tar.gz
 
 # Here with curl we are downloading wordpress cli. With --output flag I am specfying the out file. With /usr/bin/wp I am specifying the path where I want to save the file. With --silent flag I am telling curl to not show the progress bar. With  chmod +x I am making the file executable. And finally with mkdir /run/php I am creating the directory where the php-fpm process will store the pid file.
 RUN curl https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar --output /usr/bin/wp --silent && chmod +x ./usr/bin/wp && mkdir /run/php

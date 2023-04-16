@@ -10,7 +10,7 @@ Briefly about the project stages:
 
 
 
-01 - [OS installation in virtualbox - guide 00](https://github.com/byaliego/inception/wiki/01_Installing-Debian-Linux-on-Virtualbox)
+01 - [OS installation in virtualbox - guide 00](https://github.com/byaliego/inception/wiki/00__Inception-42)
 
 02 - [Installation of software inside the OS](www.google.com)
 

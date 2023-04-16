@@ -6,7 +6,7 @@
 #    By: yogun <yogun@student.42heilbronn.de>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/26 18:27:01 by yogun             #+#    #+#              #
-#    Updated: 2023/04/15 02:04:48 by yogun            ###   ########.fr        #
+#    Updated: 2023/04/16 13:09:31 by yogun            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,12 +20,11 @@ RED = \033[0;31m
 
 all:
 	@sudo hostsed add 127.0.0.1 yogun.42.fr && echo "successfully added yogun.42.fr to /etc/hosts"
-	sudo docker compose -f ./srcs/docker-compose.yml up -d
+	sudo docker-compose -f ./srcs/docker-compose.yml up -d
 
 clean:
-	sudo docker compose -f ./srcs/docker-compose.yml down --rmi all -v
-#	uncomment the following line to remove the images too
-#	sudo docker system prune -a
+	sudo docker-compose -f ./srcs/docker-compose.yml down --rmi all -v
+	sudo docker system prune -a
 
 fclean: clean
 	@sudo hostsed rm 127.0.0.1 yogun.42.fr && echo "successfully removed yogun.42.fr to /etc/hosts"
@@ -41,8 +40,17 @@ fclean: clean
 
 re: fclean all
 
-ls:
-	sudo docker image ls
-	sudo docker ps
+info:
+		@echo "=============================== IMAGES ==============================="
+		@docker images
+		@echo
+		@echo "============================= CONTAINERS ============================="
+		@docker ps -a
+		@echo
+		@echo "=============== NETWORKS ==============="
+		@docker network ls
+		@echo
+		@echo "====== VOLUMES ======"
+		@docker volume ls
 
 .PHONY: all, clean, fclean, re, ls

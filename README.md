@@ -8,15 +8,27 @@ The guides are numbered in the order they are studied.
 
 Briefly about the project stages:
 
-1. OS installation in virtualbox - guide 00
-2. Installation of software inside the OS - guide 01
-3. Port forwarding on the host - guide 02
-4. Saving snapshots to the cloud - guide 03
-5. Preliminary setup - guide 04
-6. Certificate installation - guide 05
-7. Creating a Makefile - Guide 06
-8. Deploying nginx - Guide 07
-9. Deploying mariadb - Guide 08
-10. Deploying wordpress - Guide 09
+
+
+01 - [OS installation in virtualbox - guide 00](https://github.com/byaliego/inception/wiki/01_Installing-Debian-Linux-on-Virtualbox)
+
+02 - [Installation of software inside the OS](www.google.com)
+
+03 - Port forwarding on the host - guide 02
+
+04 - Saving snapshots to the cloud - guide 03
+
+05 - Preliminary setup - guide 04
+
+06 - Certificate installation - guide 05
+
+07 - Creating a Makefile - Guide 06
+
+08 - Deploying nginx - Guide 07
+
+09 - Deploying mariadb - Guide 08
+
+10 - Deploying wordpress - Guide 09
+
 
 Put stars if you liked the guide!

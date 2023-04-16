@@ -14,21 +14,19 @@ Briefly about the project stages:
 
 02 - [Installation of software inside the OS](www.google.com)
 
-03 - Port forwarding on the host - guide 02
+03 - Port forwarding on the host
 
-04 - Saving snapshots to the cloud - guide 03
+04 - Preliminary setup 
 
-05 - Preliminary setup - guide 04
+05 - Certificate installation
 
-06 - Certificate installation - guide 05
+06 - Creating a Makefile
 
-07 - Creating a Makefile - Guide 06
+07 - Deploying nginx
 
-08 - Deploying nginx - Guide 07
+08 - Deploying mariadb
 
-09 - Deploying mariadb - Guide 08
-
-10 - Deploying wordpress - Guide 09
+09 - Deploying wordpress
 
 
 Put stars if you liked the guide!
